@@ -171,20 +171,20 @@
             </section>
 
             <!--===== CONTACT =====-->
-            <section class="contact section" id="contact">
-                <h2 class="section-title">Contact</h2>
+          <section class="contact section" id="contact">
+  <h2 class="section-title">Contact</h2>
 
-             <div class="contact__container bd-grid">
-            <form id="submit-form" class="contact__form">
-            <input type="text" name="name" placeholder="Name" class="contact__input" required>
-            <input type="email" name="email" placeholder="Email" class="contact__input" required>
-            <textarea name="message" placeholder="Your Message" cols="0" rows="10" class="contact__input" required></textarea>
-            <input type="submit" value="Submit" class="contact__button button">
-            </form>
+  <div class="contact__container bd-grid">
+    <form id="submit-form" class="contact__form">
+      <input type="text" name="name" id="name" placeholder="Name" class="contact__input" required>
+      <input type="email" name="email" id="email" placeholder="Email" class="contact__input" required>
+      <textarea name="message" id="message" placeholder="Your Message" cols="0" rows="10" class="contact__input" required></textarea>
+      <input type="submit" value="Submit" class="contact__button button">
+    </form>
+    <div id="form-message" style="margin-top: 10px; font-weight: bold;"></div>
+  </div>
+</section>
 
-            </div>
-
-            </section>
         </main>
 
         <!--===== FOOTER =====-->
@@ -205,25 +205,54 @@
         <!--===== MAIN JS =====-->
         <script src="main.js"></script>
      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
   $("#submit-form").submit(function(e){
     e.preventDefault();
+
+    // Get values
+    const name = $("#name").val().trim();
+    const email = $("#email").val().trim();
+    const message = $("#message").val().trim();
+    const emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,}$/;
+
+    const feedback = $("#form-message");
+    feedback.css("color", "red");
+
+    // Validation
+    if (name === "" || email === "" || message === "") {
+      feedback.text("Please fill in all fields.");
+      return;
+    }
+    if (!emailPattern.test(email)) {
+      feedback.text("Please enter a valid email address.");
+      return;
+    }
+
+    // If valid, submit via AJAX
     $.ajax({
       url: "https://script.google.com/macros/s/AKfycbybAAW7DbbqO1nKmrlrd4Zi3JGGpXExnBzrJ_BC5sh4yOjsNqmUfuJyPAHKQnbDtU-S/exec",
       data: $("#submit-form").serialize(),
       method: "POST",
       success: function(response) {
-        alert("Form submitted successfully");
-        window.location.reload();
+        
+        alert("Thank you! Your message has been sent.");
+
+        $("#submit-form")[0].reset(); // Clear the form
+
+        // Reload page after 1 seconds
+        setTimeout(() => {
+          window.location.reload();
+        }, 500);
       },
       error: function(err) {
-        alert("Something went wrong");
+        alert("Something went wrong. Please try again.");
         console.log(err);
       }
     });
   });
 </script>
+
 
     </body>
 </html>
